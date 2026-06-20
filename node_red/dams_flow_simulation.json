@@ -1,0 +1,96 @@
+[
+    {
+        "id": "5f9bd9fed0cc1a7d",
+        "type": "tab",
+        "label": "Flow 3",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "e0d6c14c55ac35b5",
+        "type": "inject",
+        "z": "5f9bd9fed0cc1a7d",
+        "name": "Inject Node",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "5",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 130,
+        "y": 120,
+        "wires": [
+            [
+                "480b2da3395f76ac"
+            ]
+        ]
+    },
+    {
+        "id": "480b2da3395f76ac",
+        "type": "function",
+        "z": "5f9bd9fed0cc1a7d",
+        "name": "PV Sensor Simulator",
+        "func": "let voltage = Math.floor(Math.random() * (470 - 420 + 1)) + 420;\nlet current = (Math.random() * (15 - 8) + 8);\nlet temperature = (Math.random() * (65 - 30) + 30).toFixed(2);\nlet irradiance = Math.floor(Math.random() * (1000 - 200 + 1)) + 200;\nlet efficiency = (Math.random() * (98 - 80) + 80).toFixed(2);\n\nlet power = (voltage * current).toFixed(2);\n\nmsg.payload = {\n    timestamp: new Date().toISOString(),\n    voltage: voltage,\n    current: Number(current),\n    temperature: Number(temperature),\n    irradiance: irradiance,\n    efficiency: Number(efficiency),\n    power: Number(power)\n};\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 240,
+        "y": 220,
+        "wires": [
+            [
+                "ad07e13a30bdeb2c"
+            ]
+        ]
+    },
+    {
+        "id": "ad07e13a30bdeb2c",
+        "type": "function",
+        "z": "5f9bd9fed0cc1a7d",
+        "name": "DAMS Processor",
+        "func": "let data = msg.payload;\n\n// Health score\nlet health = 100;\n\n// Temperature penalty\nif (data.temperature > 55) health -= 20;\n\n// Efficiency penalty\nif (data.efficiency < 85) health -= 15;\n\n// Irradiance penalty\nif (data.irradiance < 300) health -= 10;\n\n// Determine status\nlet status = \"Normal\";\n\nlet fault = \"None\";\n\nif (data.temperature > 60)\n    fault = \"Overheating\";\n\nif (data.efficiency < 82)\n    fault = \"Efficiency Degradation\";\n\nif (health < 90)\n    status = \"Warning\";\n\nif (health < 70)\n    status = \"Critical\";\n\nmsg.payload = {\n    plant_id: \"PV_PLANT_001\",\n    sensor_id: \"PV_ARRAY_01\",\n    timestamp: data.timestamp,\n\n    voltage: data.voltage,\n    current: data.current,\n    power: data.power,\n\n    temperature: data.temperature,\n    irradiance: data.irradiance,\n    efficiency: data.efficiency,\n\n    health_score: health,\n    status: status,\n    fault_type: fault\n};\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 470,
+        "y": 220,
+        "wires": [
+            [
+                "5be47781fbbe6b3f"
+            ]
+        ]
+    },
+    {
+        "id": "5be47781fbbe6b3f",
+        "type": "debug",
+        "z": "5f9bd9fed0cc1a7d",
+        "name": "Debug Node",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 590,
+        "y": 120,
+        "wires": []
+    }
+]

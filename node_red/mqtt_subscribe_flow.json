@@ -1,0 +1,78 @@
+[
+    {
+        "id": "5f70cf9e242fba81",
+        "type": "tab",
+        "label": "MQTT Subscriber",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "721c1b8adc0d092d",
+        "type": "mqtt in",
+        "z": "5f70cf9e242fba81",
+        "name": "",
+        "topic": "solar/full_data",
+        "qos": "2",
+        "datatype": "auto-detect",
+        "broker": "3b2787d9fce32db8",
+        "nl": false,
+        "rap": true,
+        "rh": 0,
+        "inputs": 0,
+        "x": 170,
+        "y": 240,
+        "wires": [
+            [
+                "4499d4087e55130f"
+            ]
+        ]
+    },
+    {
+        "id": "4499d4087e55130f",
+        "type": "debug",
+        "z": "5f70cf9e242fba81",
+        "name": "debug 1",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "false",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 320,
+        "y": 240,
+        "wires": []
+    },
+    {
+        "id": "3b2787d9fce32db8",
+        "type": "mqtt-broker",
+        "name": "",
+        "broker": "localhost",
+        "port": 1883,
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": 4,
+        "keepalive": 60,
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    }
+]

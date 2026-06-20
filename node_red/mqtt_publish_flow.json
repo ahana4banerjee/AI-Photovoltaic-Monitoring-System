@@ -1,0 +1,128 @@
+[
+    {
+        "id": "0c3d8c684e244de1",
+        "type": "tab",
+        "label": "MQTT Publisher",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "fa38791f0d0f4eb2",
+        "type": "inject",
+        "z": "0c3d8c684e244de1",
+        "name": "Inject Node",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "5",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 170,
+        "y": 300,
+        "wires": [
+            [
+                "94cbe5475d137b0c"
+            ]
+        ]
+    },
+    {
+        "id": "94cbe5475d137b0c",
+        "type": "function",
+        "z": "0c3d8c684e244de1",
+        "name": "PV Sensor Simulator",
+        "func": "let voltage = Math.floor(Math.random() * (470 - 420 + 1)) + 420;\nlet current = (Math.random() * (15 - 8) + 8);\nlet temperature = (Math.random() * (65 - 30) + 30).toFixed(2);\nlet irradiance = Math.floor(Math.random() * (1000 - 200 + 1)) + 200;\nlet efficiency = (Math.random() * (98 - 80) + 80).toFixed(2);\n\nlet power = (voltage * current).toFixed(2);\n\nmsg.payload = {\n    timestamp: new Date().toISOString(),\n    voltage: voltage,\n    current: Number(current),\n    temperature: Number(temperature),\n    irradiance: irradiance,\n    efficiency: Number(efficiency),\n    power: Number(power)\n};\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 340,
+        "y": 420,
+        "wires": [
+            [
+                "3eab1026f50d66ea"
+            ]
+        ]
+    },
+    {
+        "id": "3eab1026f50d66ea",
+        "type": "function",
+        "z": "0c3d8c684e244de1",
+        "name": "DAMS Processor",
+        "func": "let data = msg.payload;\n\n// Health score\nlet health = 100;\n\n// Temperature penalty\nif (data.temperature > 55) health -= 20;\n\n// Efficiency penalty\nif (data.efficiency < 85) health -= 15;\n\n// Irradiance penalty\nif (data.irradiance < 300) health -= 10;\n\n// Determine status\nlet status = \"Normal\";\n\nlet fault = \"None\";\n\nif (data.temperature > 60)\n    fault = \"Overheating\";\n\nif (data.efficiency < 82)\n    fault = \"Efficiency Degradation\";\n\nif (health < 90)\n    status = \"Warning\";\n\nif (health < 70)\n    status = \"Critical\";\n\nmsg.payload = {\n    plant_id: \"PV_PLANT_001\",\n    sensor_id: \"PV_ARRAY_01\",\n    timestamp: data.timestamp,\n\n    voltage: data.voltage,\n    current: data.current,\n    power: data.power,\n\n    temperature: data.temperature,\n    irradiance: data.irradiance,\n    efficiency: data.efficiency,\n\n    health_score: health,\n    status: status,\n    fault_type: fault\n};\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 550,
+        "y": 500,
+        "wires": [
+            [
+                "96e3fa9c31bc3dc0"
+            ]
+        ]
+    },
+    {
+        "id": "96e3fa9c31bc3dc0",
+        "type": "mqtt out",
+        "z": "0c3d8c684e244de1",
+        "name": "MQTT Broker",
+        "topic": "solar/full_data",
+        "qos": "0",
+        "retain": "false",
+        "respTopic": "",
+        "contentType": "",
+        "userProps": "",
+        "correl": "",
+        "expiry": "",
+        "broker": "fdec5e0d2ec26fbd",
+        "x": 500,
+        "y": 620,
+        "wires": []
+    },
+    {
+        "id": "fdec5e0d2ec26fbd",
+        "type": "mqtt-broker",
+        "name": "",
+        "broker": "localhost",
+        "port": 1883,
+        "clientid": "",
+        "autoConnect": true,
+        "usetls": false,
+        "protocolVersion": 4,
+        "keepalive": 60,
+        "cleansession": true,
+        "autoUnsubscribe": true,
+        "birthTopic": "",
+        "birthQos": "0",
+        "birthRetain": "false",
+        "birthPayload": "",
+        "birthMsg": {},
+        "closeTopic": "",
+        "closeQos": "0",
+        "closeRetain": "false",
+        "closePayload": "",
+        "closeMsg": {},
+        "willTopic": "",
+        "willQos": "0",
+        "willRetain": "false",
+        "willPayload": "",
+        "willMsg": {},
+        "userProps": "",
+        "sessionExpiry": ""
+    }
+]

@@ -1,0 +1,76 @@
+[
+    {
+        "id": "8e511990b086fd43",
+        "type": "tab",
+        "label": "Flow 2",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "e40b2420e48d689c",
+        "type": "inject",
+        "z": "8e511990b086fd43",
+        "name": "Inject Node",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "5",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 130,
+        "y": 140,
+        "wires": [
+            [
+                "c5c6207e251e2c85"
+            ]
+        ]
+    },
+    {
+        "id": "c5c6207e251e2c85",
+        "type": "function",
+        "z": "8e511990b086fd43",
+        "name": "PV Sensor Simulator",
+        "func": "let voltage = Math.floor(Math.random() * (470 - 420 + 1)) + 420;\nlet current = (Math.random() * (15 - 8) + 8);\nlet temperature = (Math.random() * (65 - 30) + 30).toFixed(2);\nlet irradiance = Math.floor(Math.random() * (1000 - 200 + 1)) + 200;\nlet efficiency = (Math.random() * (98 - 80) + 80).toFixed(2);\n\nlet power = (voltage * current).toFixed(2);\n\nmsg.payload = {\n    timestamp: new Date().toISOString(),\n    voltage: voltage,\n    current: Number(current),\n    temperature: Number(temperature),\n    irradiance: irradiance,\n    efficiency: Number(efficiency),\n    power: Number(power)\n};\n\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 420,
+        "y": 140,
+        "wires": [
+            [
+                "8ff710329093de02"
+            ]
+        ]
+    },
+    {
+        "id": "8ff710329093de02",
+        "type": "debug",
+        "z": "8e511990b086fd43",
+        "name": "Debug Node",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 730,
+        "y": 140,
+        "wires": []
+    }
+]

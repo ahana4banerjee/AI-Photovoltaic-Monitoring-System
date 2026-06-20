@@ -1,8 +1,11 @@
 # Weekly Progress Report
 
 **Name:** Ahana Banerjee
+
 **Domain:** Embedded Systems & IoT
+
 **Date of Submission:** 12/06/2026
+
 **Week Ending:** 01
 
 ## I. Overview

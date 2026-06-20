@@ -1,0 +1,122 @@
+[
+    {
+        "id": "f897d8485180db1b",
+        "type": "tab",
+        "label": "Flow 1",
+        "disabled": false,
+        "info": "",
+        "env": []
+    },
+    {
+        "id": "a3593a4826713436",
+        "type": "inject",
+        "z": "f897d8485180db1b",
+        "name": "Inject Node",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 150,
+        "y": 120,
+        "wires": [
+            [
+                "80da2b0441a0fc3d"
+            ]
+        ]
+    },
+    {
+        "id": "80da2b0441a0fc3d",
+        "type": "debug",
+        "z": "f897d8485180db1b",
+        "name": "Debug Node",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 310,
+        "y": 120,
+        "wires": []
+    },
+    {
+        "id": "011b9543aee47adf",
+        "type": "inject",
+        "z": "f897d8485180db1b",
+        "name": "Inject Node",
+        "props": [
+            {
+                "p": "payload"
+            },
+            {
+                "p": "topic",
+                "vt": "str"
+            }
+        ],
+        "repeat": "",
+        "crontab": "",
+        "once": false,
+        "onceDelay": 0.1,
+        "topic": "",
+        "payload": "",
+        "payloadType": "date",
+        "x": 110,
+        "y": 220,
+        "wires": [
+            [
+                "3da369382a821a14"
+            ]
+        ]
+    },
+    {
+        "id": "3da369382a821a14",
+        "type": "function",
+        "z": "f897d8485180db1b",
+        "name": "Function: Generate Random Voltage Values",
+        "func": "msg.payload = {\n    voltage: Math.floor(Math.random() * 50) + 420\n};\nreturn msg;",
+        "outputs": 1,
+        "timeout": 0,
+        "noerr": 0,
+        "initialize": "",
+        "finalize": "",
+        "libs": [],
+        "x": 250,
+        "y": 360,
+        "wires": [
+            [
+                "f9e543ba4a3ea33c"
+            ]
+        ]
+    },
+    {
+        "id": "f9e543ba4a3ea33c",
+        "type": "debug",
+        "z": "f897d8485180db1b",
+        "name": "Debug Node",
+        "active": true,
+        "tosidebar": true,
+        "console": false,
+        "tostatus": false,
+        "complete": "payload",
+        "targetType": "msg",
+        "statusVal": "",
+        "statusType": "auto",
+        "x": 350,
+        "y": 220,
+        "wires": []
+    }
+]
